@@ -2,7 +2,7 @@ import requests
 import zipfile
 import os
 
-def download_and_unzip(url, extract_to="GourmetAI"):
+def download_and_unzip(url, extract_to="."):
 
     os.makedirs(extract_to, exist_ok=True)
     
