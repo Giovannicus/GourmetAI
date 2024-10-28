@@ -130,6 +130,9 @@ ENV/
 env.bak/
 venv.bak/
 
+# Images
+/dataset
+
 # Spyder project settings
 .spyderproject
 .spyproject
