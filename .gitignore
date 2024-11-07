@@ -132,7 +132,6 @@ venv.bak/
 
 # Images
 /dataset
-/exps
 /exp1.zip
 # Spyder project settings
 .spyderproject
