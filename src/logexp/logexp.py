@@ -8,6 +8,8 @@ import logging
 import importlib
 from src.plotlies.plotlies import *
 
+###### Log class ##############
+
 def get_logger(ch_log_level=logging.ERROR,
                fh_log_level=logging.INFO):
     logging.shutdown()
@@ -31,7 +33,9 @@ def get_logger(ch_log_level=logging.ERROR,
         logger.addHandler(fh)
 
     return logger
+###### Log class ##############
 
+###### Xperiment class ##############
 class Experiment():
     def __init__(self, name, root, logger=None):
         self.name = name
@@ -211,3 +215,5 @@ class Experiment():
         except Exception as e:
             if self.logger:
                 self.logger.warning(f"Error updating plot: {e}")
+
+###### Xperiment class ##############

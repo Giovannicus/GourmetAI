@@ -104,6 +104,7 @@ def plot_class_distribution(
     
     return fig
 
+###### Training monitor class ##############
 class TrainingMonitor:
     def __init__(self, figsize=(12, 8)):
         self.figsize = figsize
@@ -199,7 +200,9 @@ class TrainingMonitor:
     def stop(self):
         """Cleanup method"""
         plt.close('all')
+###### Training monitor class ##############
 
+###### Show exp monitor class ##############
 class ShowExpMonitor:
     def __init__(self, train_history_fpath, val_history_fpath):
         self.train_history_fpath = train_history_fpath
@@ -292,6 +295,8 @@ class ShowExpMonitor:
         """Display the plot"""
         fig = self.create_figure()
         return fig  # Questo permetterà a Jupyter di mostrare il plot
+
+###### Show exp monitor class ##############
 
 def plot_training_history(experiment_dir):
     """Helper function to quickly plot training history"""

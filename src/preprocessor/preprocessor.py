@@ -18,26 +18,23 @@ def download_and_unzip(url, extract_to="."):
         zip_ref.extractall(extract_to)
 
     os.remove(zip_path)
-    print(f"I file sono stati estratti in: {extract_to}")
+    print(f"Files extracted in: {extract_to}")
 
 def get_balanced_indices(dataset, num_samples):
-    # Raggruppiamo gli indici per classe
+    
     class_indices = defaultdict(list)
     for idx in range(len(dataset)):
         _, label = dataset[idx]
         class_indices[label].append(idx)
 
-    # Calcoliamo quanti campioni per classe vogliamo
     num_classes = len(class_indices)
     samples_per_class = num_samples // num_classes
 
-    # Selezioniamo in modo bilanciato
     balanced_indices = []
     for class_idx in class_indices:
         indices = class_indices[class_idx]
         random.shuffle(indices)
         balanced_indices.extend(indices[:samples_per_class])
 
-    # Shuffle finale degli indici bilanciati
     random.shuffle(balanced_indices)
     return balanced_indices
