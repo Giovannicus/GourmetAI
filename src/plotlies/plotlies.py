@@ -19,7 +19,7 @@ def plot_class_distribution(
     b: float =50, 
     l: float =20, 
     r: float =20,
-    height: float =400,  # Increased height for better readability
+    height: float =400,  
     width: float =400,
     legend_x_anchor: str =  "center",
     legend_y_anchor:str = "bottom",
@@ -39,31 +39,27 @@ def plot_class_distribution(
     Returns:
         go.Figure: Plotly figure object containing the pie chart
     """
-    # Convert tensor to list and ensure it's on CPU
+
     counts = label_counts.cpu().tolist()
     
-    # Generate default class names if not provided
     if class_names is None:
         class_names = [f"Class {i}" for i in range(len(counts))]
     
-    # Ensure we have the right number of class names
     if len(class_names) != len(counts):
         raise ValueError(
             f"Number of class names ({len(class_names)}) "
             f"doesn't match number of classes in counts ({len(counts)})"
         )
     
-    # Calculate percentages
+
     total = sum(counts)
     percentages = [f"{(count/total)*100:.1f}%" for count in counts]
     
-    # Create hover text
     hover_text = [
         f"{name}<br>Count: {int(count)}<br>Percentage: {pct}" 
         for name, count, pct in zip(class_names, counts, percentages)
     ]
     
-    # Create the pie chart
     fig = go.Figure(data=[
         go.Pie(
             pull=[pull_value] * len(counts),
@@ -72,13 +68,12 @@ def plot_class_distribution(
             hovertext=hover_text,
             hoverinfo="text",
             textinfo="label+percent",
-            hole=0.3,  # Creates a donut chart
+            hole=0.3,  
             textposition="outside",
             textfont=dict(size=12),
         )
     ])
     
-    # Update layout
     fig.update_layout(
         title={
             'text': title,
@@ -95,11 +90,11 @@ def plot_class_distribution(
             'xanchor': legend_x_anchor,
             'x': legend_x
         },
-        paper_bgcolor=paper_bgcolor,    # Aggiungi questa riga
+        paper_bgcolor=paper_bgcolor,   
         plot_bgcolor=plot_bgcolor,
         margin=dict(t=t, b=b, l=l, r=r),
-        height=height,  # Increased height for better readability
-        width=width   # Set width for better aspect ratio
+        height=height, 
+        width=width  
     )
     
     return fig
@@ -114,7 +109,6 @@ class TrainingMonitor:
         self.val_precisions = []
         self.epochs = []
 
-        # Setup plot style
         plt.style.use('default')
 
     def update(self, epoch, train_loss, val_loss, train_precision, val_precision):
@@ -131,7 +125,6 @@ class TrainingMonitor:
         fig, (ax1, ax2) = plt.subplots(2, 1, figsize=self.figsize)
         fig.suptitle('Training Progress', fontsize=16, y=1.02)
 
-        # Plot Loss
         ax1.plot(self.epochs, self.train_losses, 'b-o', label='Training Loss',
                 markersize=4, linewidth=2, alpha=0.8)
         ax1.plot(self.epochs, self.val_losses, 'r-o', label='Validation Loss',
@@ -143,7 +136,6 @@ class TrainingMonitor:
         ax1.grid(True, linestyle='--', alpha=0.7)
         ax1.legend(loc='upper right', frameon=True)
 
-        # Annotate last values
         if self.train_losses:
             ax1.annotate(f'{self.train_losses[-1]:.4f}',
                         (self.epochs[-1], self.train_losses[-1]),
@@ -154,7 +146,7 @@ class TrainingMonitor:
                         xytext=(5, 5), textcoords='offset points',
                         bbox=dict(facecolor='white', edgecolor='none', alpha=0.7))
 
-        # Plot Precision
+
         ax2.plot(self.epochs, self.train_precisions, 'b-o', label='Training Precision',
                 markersize=4, linewidth=2, alpha=0.8)
         ax2.plot(self.epochs, self.val_precisions, 'r-o', label='Validation Precision',
@@ -164,9 +156,8 @@ class TrainingMonitor:
         ax2.set_ylabel('Precision')
         ax2.grid(True, linestyle='--', alpha=0.7)
         ax2.legend(loc='lower right', frameon=True)
-        ax2.set_ylim(0, 1)  # precision è sempre tra 0 e 1
+        ax2.set_ylim(0, 1)
 
-        # Annotate last values
         if self.train_precisions:
             ax2.annotate(f'{self.train_precisions[-1]:.4f}',
                         (self.epochs[-1], self.train_precisions[-1]),
@@ -214,14 +205,12 @@ class ShowExpMonitor:
         train_df = pd.read_csv(self.train_history_fpath, names=['epoch', 'loss', 'precision'])
         val_df = pd.read_csv(self.val_history_fpath, names=['epoch', 'loss', 'precision'])
 
-        # Crea subplot
         fig = make_subplots(
             rows=2, cols=1,
             subplot_titles=('Loss Over Time', 'Precision Over Time'),
             vertical_spacing=0.15
         )
 
-        # Aggiungi tracce per il training
         fig.add_trace(
             go.Scatter(x=train_df['epoch'], y=train_df['loss'],
                       name='Train Loss', mode='lines+markers',
@@ -236,7 +225,6 @@ class ShowExpMonitor:
             row=2, col=1
         )
 
-        # Aggiungi tracce per la validation
         fig.add_trace(
             go.Scatter(x=val_df['epoch'], y=val_df['loss'],
                       name='Val Loss', mode='lines+markers',
@@ -251,13 +239,12 @@ class ShowExpMonitor:
             row=2, col=1
         )
 
-        # Aggiorna il layout
         fig.update_layout(
             height=800,
             showlegend=True,
             title_text="Training Progress",
             title_x=0.5,
-            plot_bgcolor='white',  # sfondo bianco
+            plot_bgcolor='white',  
             paper_bgcolor='white'
         )
 
@@ -265,9 +252,7 @@ class ShowExpMonitor:
             showgrid=True,
             gridcolor='lightgrey',
             gridwidth=0.2,
-            griddash='dot',  # oppure usa 'dot' per punti invece che trattini
-            # oppure usa un pattern personalizzato:
-            # griddash='2,2',  # numeri più piccoli = trattini più corti e più vicini
+            griddash='dot',  
             zeroline=False,
             linecolor='black',
             linewidth=1,
@@ -278,14 +263,12 @@ class ShowExpMonitor:
             showgrid=True,
             gridcolor='lightgrey',
             gridwidth=0.2,
-            griddash='dot',  # oppure 'dot' per punti
-            # oppure griddash='2,2',
+            griddash='dot', 
             zeroline=False,
             linecolor='black',
             linewidth=1
         )
 
-        # Imposta specificamente gli assi y
         fig.update_yaxes(title_text="Loss", type="log", row=1, col=1)
         fig.update_yaxes(title_text="Precision", row=2, col=1)
 
@@ -294,7 +277,7 @@ class ShowExpMonitor:
     def plot(self):
         """Display the plot"""
         fig = self.create_figure()
-        return fig  # Questo permetterà a Jupyter di mostrare il plot
+        return fig  
 
 ###### Show exp monitor class ##############
 
@@ -304,7 +287,7 @@ def plot_training_history(experiment_dir):
     val_path = os.path.join(experiment_dir, "history", "val.csv")
 
     monitor = ShowExpMonitor(train_path, val_path)
-    return monitor.plot()  # Ritorna la figura invece di mostrarla direttamente
+    return monitor.plot() 
 
 def plot_confusion_matrix(confusion_matrix: torch.Tensor, class_names: list):
     """
@@ -313,10 +296,10 @@ def plot_confusion_matrix(confusion_matrix: torch.Tensor, class_names: list):
     Args:
         confusion_matrix: torch.Tensor - La matrice di confusione
     """
-    # Converti a numpy per plotly
+    
     cm = confusion_matrix.cpu().numpy()
 
-    # Crea la heatmap
+   
     fig = go.Figure(data=go.Heatmap(
         z=cm,
         x=class_names,
@@ -329,7 +312,7 @@ def plot_confusion_matrix(confusion_matrix: torch.Tensor, class_names: list):
         hovertemplate="Vero: %{y}<br>Predetto: %{x}<br>Valore: %{z}<extra></extra>"
     ))
 
-    # Aggiorna il layout
+    
     fig.update_layout(
         title={
             'text': 'Matrice di Confusione',
@@ -347,5 +330,4 @@ def plot_confusion_matrix(confusion_matrix: torch.Tensor, class_names: list):
         yaxis={'autorange': 'reversed'}
     )
 
-    # Mostra il plot
     fig.show()
